@@ -1,6 +1,6 @@
 import { CreateUserDto } from './dto/create-user.dto';
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Users } from './entity/user.entity';
+import { Users } from './entity/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -56,6 +56,18 @@ export class UserService {
       statusCode: HttpStatus.OK,
       data: result,
       message: 'User updated successfully',
+    };
+  }
+
+  async getUserById(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return {
+      statusCode: HttpStatus.OK,
+      data: user,
+      message: 'User retrieved successfully',
     };
   }
 }
